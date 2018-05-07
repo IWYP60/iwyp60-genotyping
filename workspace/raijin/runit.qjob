@@ -1,0 +1,43 @@
+#!/bin/bash
+#PBS -q express
+#PBS -l ncpus=16
+#PBS -l walltime=24:00:00
+#PBS -l mem=63G
+#PBS -l jobfs=400G
+#PBS -l other=gdata1
+#PBS -l wd
+#PBS -M darren.cullerne@anu.edu.au
+#PBS -W umask=117
+#PBS -m abe
+#PBS -P xe2
+
+set -xeuo pipefail
+source /g/data1/xe2/.profile
+
+export TMPDIR=$PBS_JOBFS
+
+TARGET=${TARGET:-all}
+SNAKEFILE=${SNAKEFILE:-Snakefile}
+
+NEXT=$(qsub -v TARGET=$TARGET,SNAKEFILE=$SNAKEFILE \
+       	    -W depend=afterany:$PBS_JOBID raijin/runit.qjob)
+
+source raijin/modules.sh
+
+snakemake --unlock
+
+mkdir -p data/log
+
+snakemake                                                       \
+    --snakefile ${SNAKEFILE}                                    \
+    -j ${PBS_NCPUS}                                             \
+    --rerun-incomplete                                          \
+    --keep-going 						\
+    ${TARGET}                                                   \
+    >>data/log/`date +%Y-%m-%d`_${PBS_JOBID}_snakemake.log 2>&1 \
+
+
+if [ -n "${NEXT:-}" ]
+then
+    qdel $NEXT
+fi

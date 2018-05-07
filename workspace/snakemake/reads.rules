@@ -15,8 +15,8 @@ rule sradl:
 rule sradump:
     input: "rawdata/sra/{lib}.sra",
     output:
-        r1="rawdata/runs/sra/{lib}_R1.fastq.gz",
-        r2="rawdata/runs/sra/{lib}_R2.fastq.gz",
+        r1="rawdata/sra/{lib}_R1.fastq.gz",
+        r2="rawdata/sra/{lib}_R2.fastq.gz",
     threads: 1
     log: "data/log/fastqdump/{lib}.log"
     shell:
@@ -38,8 +38,8 @@ rule sradump:
 #localrules: qcreads
 rule qcreads:
     input:
-        r1="rawdata/runs/{run}/{lib}_R1.fastq.gz",
-        r2="rawdata/runs/{run}/{lib}_R2.fastq.gz",
+        r1="rawdata/{run}/{lib}_R1.fastq.gz",
+        r2="rawdata/{run}/{lib}_R2.fastq.gz",
     output:
         reads="data/reads/runs/{run}/{lib}.fastq.gz",
     log:

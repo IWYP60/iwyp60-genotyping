@@ -1,0 +1,52 @@
+qc:
+  adapter1: CTGTCTCTTATACACATCTCCGAGCCCACGAGACNNNNNNNNATCTCGTATGCCGTCTTCTGCTTG
+  adapter2: CTGTCTCTTATACACATCTGACGCTGCCGACGANNNNNNNNGTGTAGATCTCGGTGGTCGCCGTATCATT
+  minqual: 25
+
+sample_sets:
+  - SBS
+  - ExK
+  - AUST
+
+mapping:
+  aligners:
+    - bwa
+  refs:
+    - iwgsc
+    - salzberg
+
+refs:
+  iwgsc: /g/data1/xe2/references/wheat/iwgsc/
+  salzberg: /g/data1/xe2/references/wheat/salzberglab/GCA_002220415.2_Triticum_3.1_genomic.fna.bgz
+
+denovodist:
+  kwip_sketchsize: 1e9
+  mash_sketchsize: 1e5
+  ksize: 21
+
+varcall:
+  theta_prior: 0.00001 # small, it's wheat
+  chunksize: 10000000
+  aligners:
+    - bwa
+  callers:
+    - mpileup
+  refs:
+    - iwgsc
+  samplesets:
+    - SBS
+    - ExK
+    - AUST
+  filters:
+    default: >
+      -i 'QUAL >= 10 &&
+          ALT != "." &&
+          INFO/DP >= 5 &&
+          INFO/AN >= 3'
+    strict: >
+      -i 'INFO/MQ >= 0 &&
+          QUAL >= 40 &&
+          ALT != "." &&
+          INFO/DP >= 10 &&
+          ((INFO/AN / N_SAMPLES)*2) > 0.50'
+    # Above is presence rate, >50%

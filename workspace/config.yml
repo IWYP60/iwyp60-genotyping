@@ -12,12 +12,12 @@ mapping:
   aligners:
     - bwa
   refs:
-    - iwgsc
+    # - iwgsc
     - salzberg
 
 refs:
-  iwgsc: /g/data1/xe2/references/wheat/iwgsc/
-  salzberg: /g/data1/xe2/references/wheat/salzberglab/GCA_002220415.2_Triticum_3.1_genomic.fna.bgz
+  # iwgsc: /g/data1/xe2/references/wheat/iwgsc/
+  salzberg: /g/data1/xe2/references/wheat/salzberglab/GCA_002220415.2_Triticum_3.1_genomic.fna.gz
 
 denovodist:
   kwip_sketchsize: 1e9
@@ -32,7 +32,8 @@ varcall:
   callers:
     - mpileup
   refs:
-    - iwgsc
+  #  - iwgsc
+    - salzberg
   samplesets:
     - SBS
     - ExK
